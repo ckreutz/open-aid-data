@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% set active_page = "countries" %}
+{% block title %}Recipient countries {% endblock %}
+{% block body %}
+
+		<div class="large-12 columns">
+			<h1>Recipient Countries</h1>
+			<p>
+				These are all countries that received <a href="http://en.wikipedia.org/wiki/Official_development_assistance" target="_blank">Official Development Assistance</a> or in other words foreign aid. The data behind these pages generated from two main sources. The Creditor Reporting System of the OECD and the <a href="http://www.aidtransparency.net/">International Aid Transparency Initiative (IATI)</a>. This website is one of its first attempting to combine the two data sets. Data begins with the first year for which CRS data has been provided, because it is at the moment more comprehensive, although IATI data is more detailed and also forward-looking. CRS data is always at least one and half years old. So on each recipient country page you can browse to the past, present and (coming soon) future of development projects.
+			</p>
+			</div>
+			</div>
+			<div class="row">
+				  {%- for column in info|slice(6) %}
+				    <div class="large-2 medium-3 small-6 columns">
+					<ul class="column-{{ loop.index }}">
+				    {%- for item in column %}
+				      <li><a href="{{ url_for('show_recipient_year', country=item.recipientcode, year=g.year) }}">{{ item.land }}</a></li>
+				    {%- endfor %}
+				    </ul>
+					</div>
+				  {%- endfor %}
+				</div>
+			</div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+data.addColumn('string', 'Year');
+    data.addColumn('number', 'Mio USD');
+    data.addRows([
+      {% for entry in iff %}
+['{{ entry['year'] }}',{{ entry['value']}}
+,{{ entry['ll']}}
+]{% if loop.last == False %},{% endif %}
+      {% endfor %}
+        ]);
+    var options = {
+  height: 340,
+    colors:['#055356'],
+    tooltip: {textStyle: {color: '#232323', fontSize: 16}, showColorCode: true},
+    chartArea: {left:40, width: 380},
+    lineWidth: 5,
+    pointSize: 8,
+    legend: {position: 'bottom', textStyle: {fontSize: 12}}
+    };
+  var chart = new google.visualization.AreaChart(document.getElementById('iff'));
+  var formatter = new google.visualization.NumberFormat({groupingSymbol: '.', fractionDigits: 0});
+  formatter.format(data, 1);
+  chart.draw(data, options);
+  $(window).smartresize(function () {
+    chart.draw(data, options);
+  });
+  }
+</script>

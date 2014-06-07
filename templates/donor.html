@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% set active_page = "donor_countries" %}
+{% block title %}Donor: {{ info[0]['donorname']}} {% endblock %}
+{% block body %}
+<div class="large-8 columns spacebottom">
+  <h1>Donor: {{ info[0]['donorname'] }} - {{ info[0]['jahr']}} {% if info[0]['jahr']|int > g.year %} (IATI) {% endif %} </h1>
+</div>
+<div class="large-3 columns">
+  <div class="row">
+    <div class="large-3 medium-2 small-3 columns">
+  {% if info[0]['jahr']|int > g.start_year and previous_year %}
+  <div class="pfeil-year">
+  <a href="{{ url_for('show_donor_year', donor=info[0]['donorcode'], year=info[0]['jahr']|int - 1 ) }}"><i class="fa fa-chevron-circle-left fa-2x"></i></a></div>
+  {% endif %}
+</div>
+<div class="large-7 medium-4 small-6 columns">
+  <a href="#" data-dropdown="drop" class="button tiny radius dropdown years">All Years</a>
+  <br>
+  <ul id="drop" data-dropdown-content class="f-dropdown">
+      {% for number in disbYears|reverse() %}
+      <li><a href="{{ url_for('show_donor_year', donor=number['donorcode'], year=number['jahr']) }}">{{number['jahr']}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+    <div class="large-2 medium-6 small-3 columns">
+    <div class="pfeil-year">
+    {% if next_year %}
+    <a href="{{ url_for('show_donor_year', donor=info[0]['donorcode'], year=info[0]['jahr']|int + 1 ) }}" class="pfeil-year"><i class="fa fa-chevron-circle-right fa-2x"></i></a>
+    {% endif %}
+    </div>
+  </div>
+  </div>
+  </div>
+</div>
+<div class="row">
+<div class="large-9 medium-8 columns">
+  {% if crs_entries %}
+    <div id="mainvis" style="width: auto; height: 300px;"> </div>
+    <div class="subline">{% include 'macro/data_disclaimer.html' %}.</div>
+    {% else %}
+    <div id="no-data">No IATI or CRS data for this year</div>
+    {% endif %}
+</div>
+<div class="large-3 medium-4 columns">
+  <div id="popleft" class="seitenbox">  <p><span class="big-letter">{{ info[0]['donorname'] }}</span> has implemented <span class="big-letter">{{ info[0]['total_activities'] }} projects</span> by the Official Development Assistance between {{ g.start_year }} and {{ g.year }} Of which <span class="big-letter">{{ info[0]['disbursement']|number_trunc()|number_format() }} USD</span> were spent and  {{ info[0]['total_sum']|number_trunc()|number_format() }} USD were committed.
+    </p>
+    <p>
+  </p></div>
+</div>
+</div>
+<div class="row spacebottom spacetop">
+<div class="large-6 medium-6 columns center">
+  {% include 'macro/top-chart.html' %}
+  {% include 'macro/donor-flows.html' %}
+  <h2>Grants vs. Loans</h2>
+  <p>Grants and loans per year from {{ info[0]['donorname'] }} (CRS)</p>
+  <div id="flows" style="width: auto"></div>
+</div>
+<div class="large-6 medium-6 columns center">
+  <h2>Top 5 Sectors</h2>
+  <p> Spendings for the top 5 sectors since {{ g.start_year }} onwards (CRS)</p>
+  <div id="top-sector" style="width: auto"></div>
+</div>
+</div>
+<div class="row spacetop spacebottom">
+<div class="large-6 medium-6 columns center">
+  <h2>Sectors</h2>
+</div>
+<div class="large-6 medium-6 columns center">
+  <h2>Top 10 Recipient Countries</h2>
+</div>
+</div>
+<div class="row">
+<div class="large-6 columns">
+  <table class="table tablesorter table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header percentage">%</th>
+        <th class="header projects">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in crs_entries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector">{{ entry['sectorname']|regex_replace("^\S*\.", "")}}</td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="percentage">{{ entry['treearea']|round(2) }}%</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="large-6 columns">
+  <table class="table tablesorter table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header projects">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in recipient_countries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector"><a href="{{ url_for('show_recipient_year', country=entry['recipientcode'], year=g.year) }}">{{ entry['recipientname']|regex_replace("^\S*\.", "")}}</a></td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- <div class="large-6 columns">
+  <h2 class="center">IATI Data</h2>
+  <table class="table tablesorter table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header projects">Transactions</th>
+      </tr>
+    </thead>
+    <tbody>
+      IATI
+    </tbody>
+  </table>
+  <div class="subline">As IATI data has not a consistent sector association as CRS for its 36 sectors, only the 30 biggest sectors are shown here.</div>
+</div> -->
+{% include 'macro/openspending.html' %}
+</div>
+<div class="large-10 columns spacetop">
+{% include 'macro/disqus.html' %}
+</div>
+<script>
+$(document).ready(function() {
+  $(function() {
+  OpenSpending.DatasetPage.init({
+  treemapData: {"children": [
+  {% for entry in crs_entries|sort(attribute='main_value') %}
+  {% if entry['main_value'] > 0 %}
+  {"data": {"title": "{{ entry['sectorname'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }}", "printable_value": "{{ entry['sectorname']|regex_replace("^\S*\.", "") }} USD", "link": "{{ url_for('show_schwerpunkt', schwerpunkt=entry['sectorcode']) }}", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format()  }}", "id": "{{ entry['crsid'] }}"}{% if loop.last == False %},{% endif %}
+  {% endif %}
+  {% endfor %}
+  ]}
+  });
+  });
+});
+  </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="highlight-box">
+	<div class="jahr">	{{ info['recipientname'] }}</div>
+	<div class="highlight-value-box">
+		<div class="header-box">
+			{{ info['total_sum']|replace(".", ",")|replace(",0", "")|number_format }}
+		</div>
+		<div class="subheader-box">Gesamtsumme</div>
+	</div>
+	<div class="highlight-value-box">
+		<div class="header-box">
+			{{ info['total_activities']|number_format }}
+		</div>
+		<div class="subheader-box">Aktivitäten</div>
+	</div>
+	<div class="highlight-value-box">
+		<div class="header-box">
+			{{ info['main_value']|number_format }}
+		</div>
+		<div class="subheader-box">Einnahmen minus Ausgaben</div>
+	</div>
+</div>

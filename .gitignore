@@ -1,0 +1,28 @@
+# Can ignore specific files
+.DS_Store
+*.sqlite
+*.pr
+venv
+*.pyc
+log.txt
+*.sublime-workspace
+*.sublime-project
+log_sectors.txt
+log_purpose.txt
+log.txt
+log_donor.txt
+
+# Use wildcards as well
+# *~
+*.swp
+
+# Can also ignore all directories and files in a directory.
+
+bin
+build
+include
+lib
+.Python
+*.pyc
+
+

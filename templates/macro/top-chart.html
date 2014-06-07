@@ -1,0 +1,62 @@
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var dataB = new google.visualization.DataTable();
+dataB.addColumn('string', 'Jahr');
+dataB.addColumn('number', '{{ topsector[0]['sectorname']|regex_replace("^\S*\.", "") }}');
+{% if topsector[1] %}
+dataB.addColumn('number', '{{ topsector[1]['sectorname']|regex_replace("^\S*\.", "") }}');
+{% endif %}
+{% if topsector[2] %}
+dataB.addColumn('number', '{{ topsector[2]['sectorname']|regex_replace("^\S*\.", "") }}');
+{% endif %}
+{% if topsector[3] %}
+dataB.addColumn('number', '{{ topsector[3]['sectorname']|regex_replace("^\S*\.", "") }}');
+{% endif %}
+{% if topsector[4] %}
+dataB.addColumn('number', '{{ topsector[4]['sectorname']|regex_replace("^\S*\.", "") }}');
+{% endif %}
+dataB.addRows([
+{% for entry in sectoryears %}
+['{{ entry['Year'] }}',{{ entry['sector1']}},{{ entry['sector2']}}
+{% if topsector[2] %}
+,{{ entry['sector3']}}
+{% endif %}
+{% if topsector[3] %}
+,{{ entry['sector4']}}
+{% endif %}
+{% if topsector[4] %}
+,{{ entry['sector5']}}
+{% endif %}
+]{% if loop.last == False %},{% endif %}
+      {% endfor %}
+        ]);
+    var optionsB = {
+    height: 340,
+colors: ["#ffb522","#f8e47f","#31398f","#f654ef","#21f36f"],
+    tooltip: {textStyle: {color: '#232323', fontSize: 16}, showColorCode: true},
+    chartArea: {left:40, width: 380},
+    lineWidth: 3,
+    pointSize: 4,
+    legend: {position: 'bottom', textStyle: {fontSize: 12}}
+        };
+  var chartB = new google.visualization.LineChart(document.getElementById('top-sector'));
+  var formatter = new google.visualization.NumberFormat({groupingSymbol: '.', fractionDigits: 0});
+  formatter.format(dataB, 1);
+  formatter.format(dataB, 2);
+{% if topsector[2] %}
+  formatter.format(dataB, 3);
+{% endif %}
+{% if topsector[3] %}
+  formatter.format(dataB, 4);
+{% endif %}
+{% if topsector[4] %}
+  formatter.format(dataB, 5);
+{% endif %}
+chartB.draw(dataB, optionsB);
+$(window).smartresize(function () {
+  chartB.draw(dataB, optionsB);
+});
+  }
+</script>

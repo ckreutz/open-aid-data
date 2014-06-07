@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% set active_page = "schwerpunkte" %}
+{% block title %}Sectors{% endblock %}
+{% block body %}
+<div class="large-10 columns spacebottom">
+  <h1>
+  {% if var['year'] == "all" %}
+  All Sectors 2000-{{ g.year }}
+  {% else %}
+  All sectors  {{ var['year'] }}
+  {% endif %}
+  </h1>
+</div>
+<div class="large-2 columns">
+  <a href="#" data-dropdown="drop" class="button tiny radius dropdown years">Single Years</a>
+  <br>
+  <ul id="drop" data-dropdown-content class="f-dropdown">
+    {% for number in range(g.start_year, g.year + 1, 1)|reverse() %}
+    <li><a href="{{ url_for('show_schwerpunkte', year=number) }}">{{number}}</a> </li>
+    {% endfor %}
+  </ul>
+</div>
+</div>
+<div class="row">
+<div class="large-10 columns">
+  <div id="mainvis" style="width: auto; height: 300px;"> </div>
+  <div class="subline">{% include 'macro/data_disclaimer.html' %} </div>
+</div>
+<div class="large-2 columns">
+  <p>
+    These are all 36 sectors according to <a href="http://www.oecd.org/dac/" target="_blank">DAC.</a> Below these sectors, there are 197 sub sectors or purposes.
+  </p>
+</div>
+</div>
+<div class="row spacetop">
+<div class="large-12 columns">
+  <h2>
+  {% if total['year'] == "all" %}
+  All Sectors 2000-{{ g.year }}
+  {% else %}
+  All sectors  {{ total['year'] }}
+  {% endif %}
+  </h2>
+</div>
+</div>
+<div class="row">
+<div class="large-12 columns">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header projekte">Percentage</th>
+        <th class="header projekte">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector"><a href="{{ url_for('show_schwerpunkt', schwerpunkt=entry.sectorcode) }}">{{ entry['sectorname']|regex_replace("^\S*\.", "") }}</a></td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="percentage">{{ entry['treearea']|round(2) }}%</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include 'macro/quellen.html' %}
+</div>
+{% include 'macro/openspending.html' %}
+</div>
+<div class="large-10 columns spacetop">
+{% include 'macro/disqus.html' %}
+</div>
+<script>
+$(document).ready(function() {
+OpenSpending.DatasetPage.init({
+treemapData: {"children": [
+{% for entry in entries|sort(attribute='main_value') %}
+{% if entry['main_value'] > 0 %}
+{"data": {"title": "{{ entry['sectorname'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }} USD", "printable_value": "{{ entry['sectorname']|regex_replace("^\S*\.", "") }}", "link": "{{ url_for('show_schwerpunkt', schwerpunkt=entry.sectorcode) }}", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format()  }}", "id": "{{ entry['crsid'] }}"}{% if loop.last == False %},{% endif %}
+{% endif %}
+{% endfor %}
+]}
+});
+});
+</script>
+{% endblock %}

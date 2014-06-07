@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% set active_page = "feedback" %}
+{% block title %}Feedback{% endblock %}
+{% block body %}
+<div class="large-12 columns">
+    <h1>Feedback</h1>
+</div>
+</div>
+<div class="row">
+<div class="large-9 columns">
+  <p>
+    This page is to document changes to the website and for feedback. Please comment with ideas for data sources, missing data views, errors and improvements or comment directly on the respective page or send us a tweet <a href="https://twitter.com/open_aid_data" target="_blank">@open_aid_data</a>. Help us shed light on foreign aid spending. Thanks! Have a look out at the blog to see what has been implemented.
+  </p>
+</div>
+<div class="large-3 columns">
+</div>
+</div>
+<div class="large-10 columns spacetop">
+    {% include 'macro/disqus.html' %}
+</div>
+{% endblock %}

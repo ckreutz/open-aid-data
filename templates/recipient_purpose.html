@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{#% set active_page = "countries" %#}
+{% block title %}{{ totalYear[0]['land'] }}: {{ totalYear[0]['sectorname']|regex_replace("^\S*\s", "") }} {% endblock %}
+{% block body %}
+<div class="large-8 columns">
+  <h1>{{ totalYear[0]['sectorname']|regex_replace("^\S*\.", "") }} </h1>
+</div>
+<div class="large-4 columns spacetree">
+  <h2> {{ totalYear[0]['land']}}</h2>
+</div>
+</div>
+<div class="row">
+<div class="large-8 columns">
+  <div id="mainvis" style="width: auto; height: 300px;"> </div>
+  <div class="subline">{% include 'macro/data_disclaimer.html' %}  </div>
+</div>
+<div class="large-4 columns seitenbox"><p>{{ totalYear[0]['total']|number_trunc()|number_format() }} USD have been granted as Official Development Assistance to the sector {{ totalYear[0]['sectorname']|regex_replace("^\S*\s", "") }} since  {{ g.start_year }}. <span class="big-letter">{{ totalYear[0]['disb_total']|number_trunc()|number_format() }} USD</span> have been distributed so far.</p> <p>The highest amount of {{ spitzenreiter[0]['total']|number_trunc()|number_format() }} USD from ODA for {{ totalYear[0]['sectorname']|regex_replace("^\S*\.", "") }} went to  {{ spitzenreiter[0]['land'] }}.</p><p><a href="/sectors/all">All sectors at a glance</a>.</p>
+</div>
+</div>
+<div class="row spacetop">
+<div class="large-6 columns center">
+  {% include 'macro/sector-chart.html' %}
+  <h2>Grants vs. Loans</h2>
+  <div id="flows" style="width: auto"></div>
+</div>
+<div class="large-6 columns center">
+  <h2>
+  Projects
+  </h2>
+  <div id="projects" style="width: auto"></div>
+</div>
+</div>
+<div class="row spacetop spacebottom">
+<div class="large-6 columns">
+  <h2>{% if totalYear[0]['donorcode'] == "top" %} Top Projects {% else %} Projects by {{ entries[0]['donorname'] }} {% endif %} </h2>
+</div>
+<div class="large-6 columns">
+  <span style="float: left; font-size: 20px; font-weight: bold; margin-right: 10px">Find by donor:</span>
+  <form>
+    <select class="chosen-select" name="URL" onchange="window.location.href=this.form.URL.options[this.form.URL.selectedIndex].value">
+      <option value="{{ url_for('show_sektor', country=totalYear[0]['recipientcode'], sector=totalYear[0]['sectorcode'], donor="top") }}" {% if totalYear[0]['donorcode'] == "top" %} selected {% endif %}>Top projects</option>
+      {% for donor in donors %}
+      <option value="{{ url_for('show_sektor', country=totalYear[0]['recipientcode'], sector=totalYear[0]['sectorcode'], donor=donor['donorcode']) }}" {% if donor['donorcode'] == totalYear[0]['donorcode'] %} selected {% endif %}
+      >{{ donor['donorname'] }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+</div>
+<div class="row">
+<div class="large-12 columns">
+  {% if entries %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="header green">Projects</th>
+        <th class="header black">Purpose</th>
+        <th class="header black">Donor</th>
+        <th class="header black">Organisation</th>
+        <th class="header orange">Year</th>
+        <th class="header blue currency headerSortUp">Amount</th>
+        <th class="header green">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="project">{{ entry['projecttitle'] }}</td>
+        <td class="purpose">{{ entry['purposename'] }}</td>
+        <td class="purpose">{{ entry['donorname'] }}</td>
+        <td class="agency">{{ entry['agencyname'] }}</td>
+        <td class="year">{{ entry['Year'] }}</td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="flow last">{{ entry['flowname'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="subline">Data values are shown as is. If project title or other data items are missing it is incorrect in the existing data set. </div>
+  {% else %}
+  <div class="" style="font-size: 32px;margin: 0 auto;padding: 20px; background-color: #eeeeee;">No Projects</div>
+  {% endif %}
+</div>
+</div>
+<div class="row spacetop spacebottom">
+<div class="large-12 columns">
+  <h2>Projects by donor</h2>
+</div>
+</div>
+<div class="row spacebottom">
+{%- for column in donors|slice(6) %}
+<div class="large-2 columns">
+  <ul class="column-{{ loop.index }}">
+    {%- for item in column %}
+    <li><a href="{{ url_for('show_sektor', country=totalYear[0]['recipientcode'], sector=totalYear[0]['sectorcode'], donor=item.donorcode) }}">{{ item.donorname }}</a></li>
+    {%- endfor %}
+  </ul>
+</div>
+{%- endfor %}
+</div>
+</div>
+{% include 'macro/openspending.html' %}
+<div class="row">
+<div class="large-10 columns spacetop">
+  {% include 'macro/disqus.html' %}
+</div>
+</div>
+<script>
+$(document).ready(function() {
+$(".chosen-select").chosen({placeholder: "Choose donor..."});
+OpenSpending.DatasetPage.init({
+treemapData: {"children": [
+{% for entry in purposes|sort(attribute='main_value') %}
+{"data": {"title": "{{ entry['purposename'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }} USD", "printable_value": "{{ entry['purposename'] }}", "link": "", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format() }}", "id": "{{ entry['id'] }}"}{% if loop.last == False %},{% endif %}
+{% endfor %}
+]}
+});
+});
+</script>
+{% endblock %}

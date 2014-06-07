@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% set active_page = "about" %}
+{% block title %}About{% endblock %}
+{% block body %}
+<div class="large-12 columns">
+    <h1>About</h1>
+</div>
+</div>
+<div class="row">
+<div class="large-9 columns">
+    <p>
+    Open data is a great chance to make development aid not only more transparent, but also more efficient. Having been an aid worker for a while in Egypt and Germany myself, I could see how much information is needed. It is often very difficult to get even an overview of who is doing what. Now having the opportunity to look into various development organizations as a consultant I have seen many bottlenecks and the potential open data has to make development organizations more efficient. Open data will allow organizations to get involved and collaborate in new ways.
+    </p>
+    <p>
+    Nowadays we have already some interesting and helpful data sources at hand, such as the Creditor Reporting System and IATI. But most websites show only one of these two data sets and often only a fraction of the respective set. Unfortunately development organizations such as <a href="http://open.undp.org" target="_blank">UNDP</a> or <a href="http://devtracker.dfid.gov.uk/" target="_blank">DFID</a> only publish their data and have not understood the point of combining data and making all data easily accessible. As a beneficiary of development aid, a journalist, activist or an aid worker, I do not want to visit 30+ websites to see all data. I want to it all in one place: Fast and easy. That's why I have set up this page.
+    <p>
+    </p>
+    <p>
+        Some might argue that his page is just another visualization of aid data, but it intends to go beyond that:
+    </p>
+    <ul>
+        <li>
+        The website shows all data down to the smallest project (at least for CRS so far, IATI to follow soon) for all ODA-countries. We are talking about of over 3 million rows of data.
+        </li>
+        <li>
+        To my knowledge this website is the first to combine IATI and CRS data and to look at the past, present and future.
+        </li>
+        <li>
+        The website is one of the few to attempt to combine data sets to get a better picture. Examples are the illicit financial flows data, which shows how tiny development aid is in comparison, and the development indicators.
+        </li>
+        <li>
+        The website’s goal is to be fast. You do not have click through "academic features" (e.g. aidflows.org), but see big and small figures fast from different angles.
+        <li>
+        The website is accessible from everywhere and from all devices and is optimized for smart phones as well as tablets.
+        </li>
+    </ul>
+    <p>
+        No doubt this platform is only a first step and much more needs to be done. Keep an eye on the <a href="http://blog.openaiddata.org/">blog</a> or <a href="https://twitter.com/open_aid_data">Twitter</a> to follow latest changes. Keep in mind this version already took countless hours to develop and to create clean data and find work-arounds around the many pitfalls of data sets to make this happen. For example, the IATI data is unfortunately similar to CRS at some levels and in some areas is quite messy. Everybody is welcome to send feedback and propose improvements here or via twitter. As this is a voluntarily project I can’t promise too much, but further development is ensured.
+    </p>
+    <p>
+        Although everyone tends to look at the IATI data these days, I believe the CRS data is still really strong as it has entries on all ODA countries, providing a better overview. That's why this page places emphasis on CRS rather than IATI, but the latter will be developed much further in the coming months.
+    </p>
+        This website was only possible thanks to some groundwork by others. First up the development organizations, which provide the data to CRS and IATI. And of course thanks to open data enthusiasts worldwide opening up data. But also thanks to many fantastic open source libraries such as <a href="https://github.com/mitsuhiko/flask">Flask</a>, <a href="https://github.com/openspending">Openspending</a>, <a href="https://github.com/zurb/foundation">Zurb Foundation</a>, <a href="http://omnipotent.net/jquery.sparkline/#s-about">jQuery Sparklines</a>,  Lastly a special thanks to <a href="https://twitter.com/Mark_Brough">Mark Brough</a> for his relentless work on IATI to <a href="https://github.com/okfn/iatitools">make XML data also available in other data standards.</a> I know the <a href="http://datastore.iatistandard.org/">IATI datastore</a> will hopefully change that.
+    </p>
+    <p>
+        Open Aid Data itself is also open source and will be released shortly <a href="https://github.com/ckreutz/openaiddata">here on Github.</a>
+    </p>
+    </p>
+    <a name="data"></a>
+    <h2>Remarks on data</h2>
+    <p>
+    Please keep in mind the following points when you digest the data on this page:
+    </p>
+    <ul>
+    <li>
+        I can give no guarantee that all data and calculations are correct. I weeks of calculations and cross checks, but there still can be mistakes. If you find something incorrect, please send me an email and I correct it.
+    </li>
+    <li>
+        On the IATI data, take into consideration that transactions are often provided in different currencies. I took the <a href="http://stats.oecd.org/index.aspx?queryid=169">OECD annual average exchange rate</a> to the US-Dollar for currency conversions.
+    </li>
+    <li>
+        CRS data but also IATI data is not always clean and correct. Particular CRS data is on quite messy on project level. The same applies for the IATA data where for example country data is not always correct. So if you see missing project titles or wrong spellings don’t blame me. I took the data as is and made no changes to it.
+    </li>
+    <li>
+        Unfortunately countries, which lose their ODA recipient status, are removed from CRS. So don't be surprised you can not find countries such as Russia, which has received some considerable ODA funds.
+    </li>
+        Aggregated figures for many years are not necessarily adjusted. So numbers can vary by a few percentage points depending on inflation etc.
+    </li>
+    <li>
+        The reason why this website starts in 2000 is that the data gets much better from 2000 onwards. The Creditor Reporting System (CRS) data prior to 2000 does not seem as comprehensive to me.
+    </li>
+    </ul>
+    <p>
+        For further questions send me an email to <a href="mailto:ckreutz@gmail.com">ckreutz@gmail.com</a>.
+    </p>
+    <p>
+        Openaiddata.org is possible thanks to the sponsorship from <a href="http://www.crisscrossed.de/en" target="_blank">www.crisscrossed.de</a> and <a href="http://www.wethinq.com" target="_blank">www.wethinq.com</a>.
+    </p>
+
+</div>
+<div class="large-3 columns">
+</div>
+</div>
+<div class="large-10 columns spacetop">
+    {% include 'macro/disqus.html' %}
+</div>
+{% endblock %}

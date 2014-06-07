@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% set active_page = "start" %}
+{% block title %}Start {% endblock %}
+{% block body %}
+<div class="large-12 medium-12 columns">
+  <h1>One place for all - Data for development aid
+    </h1>
+</div>
+</div>
+<div class="row spacebottom">
+<div class="large-6 medium-6 columns"><p>
+  Openaiddata.org provides detailed developing aid finance data from around the world. Unlike most other websites, this project combines data from various sources offering a more comprehensive view on foreign aid. Sources include the International Aid Transparency Initiative (IATI), the Creditor Reporting System (CRS) of the OECD,</p>
+  </p>
+</div>
+<div class="large-6 medium-6 columns"><p> the World Bank and the Illicit Financial Flow data set from Global Financial Integrity. So far, Openaiddata.org has combined over 3 million rows of data. For feedback send us a tweet <a href="http://www.twitter.com/open_aid_data">@open_aid_data</a> or comment <a href="/feedback">here.</a></p>
+</div>
+</div>
+ <div class="row spacebottom">
+<div class="large-12 medium-12 columns">
+  <h2>All spendings and projects between {{ g.start_year }} and {{ g.year }}</h2>
+  <iframe width='100%' height='520' frameborder='0' src='http://crisscrossed.cartodb.com/viz/d3a40be0-c11d-11e3-a763-0e230854a1cb/embed_map?title=false&description=false&search=false&shareable=true&cartodb_logo=false&layer_selector=true&legends=true&scrollwheel=false&fullscreen=false&sublayer_options=1%7C1&sql=SELECT%20*%20FROM%20openaiddata&zoom=2&center_lat=27.68352808378776&center_lon=-1.318359375' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+</div>
+<div class="large-4 columns">
+</div>
+</div>
+<div class="row start">
+<div class="large-6 medium-6 columns">
+  <h2>The biggest Sectors</h2>
+  <p>All Projects belong to one of 36 sectors. (CRS)</p>
+  <div id="mainvis" style="width: auto; height: 300px;"> </div>
+</div>
+<div class="large-6 medium-6 columns">
+  <h2>Offical Development Assistance (ODA)</h2>
+  <p>Foreign Aid spending by year</p>
+  <script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+  function drawChart() {
+      var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Year');
+      data.addColumn('number', 'Total per year in USD');
+      data.addRows([
+        {% for entry in gesamt %}
+        ['{{ entry['Year'] }}',{{ entry['total_sum']|number_trunc() }}
+        ]{% if loop.last == False %},{% endif %}
+        {% endfor %}
+          ]);
+      var options = {
+    height: 340,
+      colors:['#07833b'],
+      tooltip: {textStyle: {color: '#232323', fontSize: 16}, showColorCode: true},
+      chartArea: {left:60, width: 380},
+      lineWidth: 4,
+      pointSize: 8,
+      legend: {position: 'bottom', textStyle: {fontSize: 12}}
+      };
+    var chart = new google.visualization.AreaChart(document.getElementById('history'));
+    var formatter = new google.visualization.NumberFormat({groupingSymbol: '.'});
+    formatter.format(data, 1);
+    chart.draw(data, options);
+    $(window).smartresize(function () {
+      chart.draw(data, options);
+    });
+    }
+  </script>
+  <div id="history"></div>
+</div>
+</div>
+{% include 'macro/openspending.html' %}
+<script>
+$(document).ready(function() {
+OpenSpending.DatasetPage.init({
+treemapData: {"children": [
+  {% for entry in entries|sort(attribute='main_value') %}
+{"data": {"title": "{{ entry['sectorname'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }} USD", "printable_value": "{{ entry['sectorname']|regex_replace("^\S*\.", "") }}", "link": "{{ url_for('show_schwerpunkt', schwerpunkt=entry['sectorcode']) }}", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format()  }}", "id": "{{ entry['crsid'] }}"}{% if loop.last == False %},{% endif %}
+{% endfor %}
+  ]}
+});
+});
+</script>
+{% endblock %}

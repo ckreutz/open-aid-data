@@ -1,0 +1,62 @@
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var dataB = new google.visualization.DataTable();
+dataB.addColumn('string', 'Jahr');
+dataB.addColumn('number', '{{ toppurpose[0]['purposename'] }}');
+{% if toppurpose[1] %}
+dataB.addColumn('number', '{{ toppurpose[1]['purposename'] }}');
+{% endif %}
+{% if toppurpose[2] %}
+dataB.addColumn('number', '{{ toppurpose[2]['purposename'] }}');
+{% endif %}
+{% if toppurpose[3] %}
+dataB.addColumn('number', '{{ toppurpose[3]['purposename'] }}');
+{% endif %}
+{% if toppurpose[4] %}
+dataB.addColumn('number', '{{ toppurpose[4]['purposename'] }}');
+{% endif %}
+dataB.addRows([
+{% for entry in sectoryears %}
+['{{ entry['Year'] }}',{{ entry['sector1']}},{{ entry['sector2']}}
+{% if toppurpose[2] %}
+,{{ entry['sector3']}}
+{% endif %}
+{% if toppurpose[3] %}
+,{{ entry['sector4']}}
+{% endif %}
+{% if toppurpose[4] %}
+,{{ entry['sector5']}}
+{% endif %}
+]{% if loop.last == False %},{% endif %}
+            {% endfor %}
+                ]);
+        var optionsB = {
+        height: 400,
+colors: ["#ffb522","#f8e47f","#31398f","#f654ef","#21f36f"],
+        tooltip: {textStyle: {color: '#232323', fontSize: 16}, showColorCode: true},
+        chartArea: {left:100, right: 100},
+        lineWidth: 3,
+        pointSize: 4,
+        legend: {position: 'right', textStyle: {fontSize: 12}}
+                };
+    var chartB = new google.visualization.LineChart(document.getElementById('purpose'));
+    var formatter = new google.visualization.NumberFormat({groupingSymbol: '.', fractionDigits: 0});
+    formatter.format(dataB, 1);
+    formatter.format(dataB, 2);
+{% if toppurpose[2] %}
+    formatter.format(dataB, 3);
+{% endif %}
+{% if toppurpose[3] %}
+    formatter.format(dataB, 4);
+{% endif %}
+{% if toppurpose[4] %}
+    formatter.format(dataB, 5);
+{% endif %}
+    chartB.draw(dataB, optionsB);
+    $(window).smartresize(function () {
+    chartB.draw(dataB, optionsB);
+    });
+    }
+</script>

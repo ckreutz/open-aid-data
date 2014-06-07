@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% set active_page = "countries" %}
+{% block title %}Donor countries {% endblock %}
+{% block body %}
+
+    <div class="large-12 columns spacebottom">
+      <h1>Donor Countries</h1>
+      </div>
+      </div>
+      <div class="row">
+          {%- for column in info|slice(6) %}
+            <div class="large-2 small-6 columns">
+          <ul class="column-{{ loop.index }}">
+            {%- for item in column %}
+              <li><a href="{{ url_for('show_donor_year', donor=item.donorcode, year=g.year) }}">{{ item.donorname }}</a></li>
+            {%- endfor %}
+            </ul>
+          </div>
+          {%- endfor %}
+        </div>
+      </div>
+
+{% endblock %}

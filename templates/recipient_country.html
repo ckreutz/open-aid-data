@@ -1,0 +1,318 @@
+{% extends "layout.html" %}
+{% set active_page = "recipient_countries" %}
+{% block title %}Recipient country: {{ info[0]['land']}} {% endblock %}
+{% block body %}
+<div class="large-8 columns spacebottom">
+  <h1>All Sectors in {{ info[0]['land'] }} - {{ info[0]['jahr'] }} {% if info[0]['jahr']|int > g.year %} (IATI) {% endif %}</h1>
+</div>
+<div class="large-4 columns">
+  <div class="row">
+    <div class="large-3 medium-2 small-3 columns">
+  {% if info[0]['jahr']|int > g.start_year and previous_year %}
+  <div class="pfeil-year">
+  <a href="{{ url_for('show_recipient_year', country=info[0]['recipientcode'], year=info[0]['jahr']|int - 1 ) }}"><i class="fa fa-chevron-circle-left fa-2x"></i></a></div>
+  {% endif %}
+</div>
+<div class="large-7 medium-4 small-6 columns">
+  <a href="#" data-dropdown="drop" class="button tiny radius dropdown years">All Years</a>
+  <br>
+  <ul id="drop" data-dropdown-content class="f-dropdown">
+      {% for number in disbYears|reverse() %}
+      <li><a href="{{ url_for('show_recipient_year', country=number['recipientcode'], year=number['jahr']) }}">{{number['jahr']}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+    <div class="large-2 medium-6 small-3 columns">
+    <div class="pfeil-year">
+    {% if next_year %}
+    <a href="{{ url_for('show_recipient_year', country=info[0]['recipientcode'], year=info[0]['jahr']|int + 1 ) }}" class="pfeil-year"><i class="fa fa-chevron-circle-right fa-2x"></i></a>
+    {% endif %}
+    </div>
+  </div>
+  </div>
+  </div>
+</div>
+<div class="row">
+<div class="large-9 medium-8 columns">
+  {% if crs_entries %}
+  <div id="mainvis" style="width: auto; height: 300px;"> </div>
+  <div class="subline">{% include 'macro/data_disclaimer.html' %}.</div>
+  {% else %}
+  <div id="no-data">No IATI or CRS data for this year</div>
+  {% endif %}
+</div>
+<div class="large-3 medium-4 columns">
+  <div class="seitenbox">  <p>In {{ info[0]['land'] }} there were <span class="big-letter">{{ info[0]['total_activities']|number_format() }} projects</span> by the Official Development Assistance between {{ g.start_year }} and {{ g.year }} Of which <span class="big-letter">{{ info[0]['disbursement']|number_trunc()|number_format() }} USD</span> were spent and  {{ info[0]['total_sum']|number_trunc()|number_format() }} USD were committed.
+    {% if position %} 
+      In the recipients list from the ODA, in the last {{ g.year - g.start_year }} years {{ info[0]['land'] }} has been positioned in the <span class="big-letter"> {{ position[0]['id'] }}</span> place of a total of 154.
+      {% endif %}
+    </p>
+    <p>
+  </p></div>
+</div>
+</div>
+
+<div class="row spacebottom spacetop">
+<div class="large-6 medium-6 columns center">
+  {% include 'macro/top-chart.html' %}
+  {% include 'macro/country-iff.html' %}
+  <h2>Illicit Financial Flows</h2>
+  <p>Capital outflows per year - figures by <a href="http://iff.gfintegrity.org/iff2013/2013report.html" target="_blank">Global Financial Integrity</a></p>
+  <div id="iff" style="width: auto"></div>
+</div>
+<div class="large-6 medium-6 columns center">
+  <h2>Top 5 Sectors</h2>
+  <p> Development of the top 5 sectors since {{ g.start_year }} onwards (CRS) </p>
+  <div id="top-sector" style="width: auto"></div>
+</div>
+</div>
+{% if wb_iso != 'XXX' %}
+<div class="row spacetop">
+<div class="large-12 columns center">
+  <h2 style="color: #aaaaaa;">
+    <i class="fa fa-arrow-circle-up"></i>
+    Hover over diagrams for exact figures
+    <i class="fa fa-arrow-circle-down"></i>
+  </h2>
+</div>
+</div>
+<div class="row spacetop">
+<div class="large-12 columns center">
+  <h2>Key Indicators since 2000</h2>
+</div>
+</div>
+<div class="row spacebottom spacetop">
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="literacy">Loading..</span>
+    <p>Literacy Rate
+      % of people 15 and above
+    </p>
+</div>
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="life">Loading..</span>
+    <p>Life Expectancy at birth
+      (years)
+    </p>
+</div>
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="mortality">Loading..</span>
+    <p>
+      Child Mortality
+      <br>
+      per 1,000 live births
+    </p>
+</div>
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="income">Loading..</span>
+    <p>GNI per capita in USD</p>
+</div>
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="co2">Loading..</span>
+    <p>
+      CO2 emissions metric
+      <br>
+      tons per capita
+    </p>
+</div>
+<div class="large-2 medium-4 small-6 columns">
+    <span class="dynamicbar" data-chart="school">Loading..</span>
+    <p>
+      School Enrollment
+      <br>
+      primary (% net)
+    </p>
+</div>
+</div>
+</div>
+{% endif %}
+<div class="row spacetop spacebottom">
+<div class="large-12 columns center">
+  <h2>Sector Spendings</h2>
+</div>
+</div>
+<div class="row">
+{% if info[0]['jahr']|int <= g.year %}
+<div class="large-6 columns">
+  <h2 class="center">Creditor Reporting System</h2>
+  <table class="table tablesorter table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header percentage">%</th>
+        <th class="header projects">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in crs_entries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector"><a href="{{ url_for('show_sektor', country=info[0]['recipientcode'], sector=entry['sectorcode'], donor="top" ) }}">{{ entry['sectorname']|regex_replace("^\S*\.", "")}}</a></td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="percentage">{{ entry['treearea']|round(2) }}%</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="large-6 columns">
+{% else %}
+<div class="large-12 columns">
+{% endif %}
+  <h2 class="center">IATI Data</h2>
+  <table class="table tablesorter table-striped">
+    <thead>
+      <tr>
+        <th class="header schwerpunkte">Sectors</th>
+        <th class="header currency">Amount</th>
+        <th class="header projects">Transactions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in iati_entries %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector">{{ row['sectorname'] }}</td>
+        <td class="currency">{{ row['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="anzahl last">{{ row['transactions']}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="subline">As IATI data has not a consistent sector association as CRS for its 36 sectors, only the 30 biggest sectors are shown here. Soon more detailed data will be published here. Last updated: {{ g.rendered }}</div>
+</div>
+{% include 'macro/openspending.html' %}
+</div>
+<div class="large-10 columns spacetop">
+{% include 'macro/disqus.html' %}
+</div>
+<script>
+$(document).ready(function() {
+  $(function() {
+  OpenSpending.DatasetPage.init({
+  treemapData: {"children": [
+  {% for entry in crs_entries|sort(attribute='main_value') %}
+  {% if entry['main_value'] > 0 %}
+  {"data": {"title": "{{ entry['sectorname'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }}", "printable_value": "{{ entry['sectorname']|regex_replace("^\S*\.", "") }} USD", "link": "{% if info[0]['jahr']|int <= g.year %}{{ url_for('show_sektor', country=info[0]['recipientcode'], sector=entry['sectorcode'], donor="top" ) }}{% endif %}", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format()  }}", "id": "{{ entry['id'] }}"}{% if loop.last == False %},{% endif %}
+  {% endif %}
+  {% endfor %}
+  ]}
+  });
+  });
+  function renderChart(name, data) {
+    var xvalues = [], yvalues = [];
+    for(var i = 0; i < data[1].length; i++) {
+      var item = data[1][i];
+      if( item.value ) {
+        xvalues.push(item.date);
+        yvalues.push(Math.round(item.value * 100) / 100);
+      }
+    }
+
+    console.log(xvalues, yvalues);
+
+    $('.dynamicbar[data-chart="' + name + '"]').sparkline(yvalues.reverse(),
+      {type: 'line',
+      lineColor: '#07833b',
+      width: '120px',
+      height: '80px',
+      lineWidth: 3,
+      tooltipPrefix: ''}
+    );
+  };
+
+  function getLiteracy(wbUrl) {
+    window.update_literacy = function (data) {
+      renderChart('literacy', data)
+    };
+
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/SE.ADT.LITR.ZS?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_literacy'
+    });
+  };
+  function getIncome(wbUrl) {
+    window.update_income = function (data) {
+      renderChart('income', data)
+    };
+
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/NY.GDP.PCAP.CD?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_income'
+    });
+  };
+  function getLife(wbUrl) {
+    window.update_life = function (data) {
+      renderChart('life', data)
+    };
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/SP.DYN.LE00.IN?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_life'
+    });
+  };
+  function getMortality(wbUrl) {
+    window.update_mortality = function (data) {
+      renderChart('mortality', data)
+    };
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/SP.DYN.IMRT.IN?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_mortality'
+    });
+  };
+  function getIncome(wbUrl) {
+    window.update_income = function (data) {
+      renderChart('income', data)
+    };
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/NY.GDP.PCAP.CD?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_income'
+    });
+  };
+  function getco2(wbUrl) {
+    window.update_co2 = function (data) {
+      renderChart('co2', data)
+    };
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/EN.ATM.CO2E.PC?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_co2'
+    });
+  };
+  function getSchool(wbUrl) {
+    window.update_school = function (data) {
+      renderChart('school', data)
+    };
+    $.ajax({
+      url: wbUrl + "{{ wb_iso }}" + '/indicators/SE.PRM.NENR?date=2000:{{ g.year }}&format=jsonP',
+      dataType: 'jsonp',
+      jsonp: 'prefix',
+      jsonpCallback: 'update_school'
+    });
+  };
+  $(document).ready(function() {
+    var wbUrl = 'http://api.worldbank.org/countries/';
+
+    getLiteracy(wbUrl);
+    getLife(wbUrl);
+    getMortality(wbUrl);
+    getIncome(wbUrl);
+    getco2(wbUrl);
+    getSchool(wbUrl);
+  });
+});
+</script>
+{% endblock %}

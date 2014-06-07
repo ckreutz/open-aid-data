@@ -1,0 +1,336 @@
+@import url(http://fonts.googleapis.com/css?family=Abel|PT+Sans);
+
+/*---- MAIN ----- */
+
+body {
+	font-family: 'Abel', sans-serif;
+	font-size: 1em;
+	line-height: 1.5em;
+	color: #333333;
+	background-color: #eeeeee;
+	margin: 0px;
+	word-spacing: 0.2em;
+}
+
+.frame {
+	padding: 1.5em;
+	background-color: #ffffff;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	margin-top: 20px;
+}
+
+#header {
+background: #fff;
+margin-bottom: 19px;
+padding: 10px 0 10px 0;
+box-shadow: 0px 0px 7px 1px rgba(160, 160, 160, 0.1);
+-webkit-box-shadow: 0px 0px 7px 1px rgba(160, 160, 160, 0.1);
+-moz-box-shadow: 0px 0px 7px 1px rgba(160, 160, 160, 0.1);
+border-bottom: 1px solid #e3e3e3;
+}
+
+/*--- HEADINGS ---*/
+
+h1 {
+	font-family: 'PT Sans', sans-serif;
+  font-size: 2.1em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+/*--- TEXT ---*/
+
+p, ul li p {
+	font-size: 1em;
+	line-height: 22px;
+}
+
+.subline {
+	color: #676767;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+span.big-letter  {
+	color: #ffffff;
+	background-color: #055356;
+	padding: 2px;
+}
+
+.center {
+	text-align: center;
+}
+
+/*--- LINKS ---*/
+
+a {
+	color: #167db5;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:visited {
+	opacity: 0.8;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active,
+a:focus {
+	position: relative;
+	top: 1px;
+}
+
+/*--- HEADER ---*/
+
+#site-title {
+	font-family: 'Abel', sans-serif;
+	font-size: 2em;
+	font-weight: bolder;
+	text-transform: none;
+	margin: 20px 0 20px 0;
+	color: #333333;
+}
+
+#site-title a,
+#site-title a:active,
+#site-title a:hover,
+#site-title a:visited {
+	color: #333333;
+	text-decoration: none;
+}
+
+#slogan {
+	font-size: 1em;
+  font-family: Georgia;
+  margin-top: 30px;
+  float: right;
+}
+
+/*---- HIGHLIGHT BOX ---- */
+
+.highlight-box {
+text-align: center;
+margin: auto;
+}
+
+.jahr {
+font-size: 3.2em;
+margin: 20px 0 20px;
+}
+
+.highlight-value-box {
+	font-size: 1.7em;
+	display: block;
+	width: 200px;
+	height: 69px;
+	background-color: #20567c;
+	color: #ffffff;
+	padding: 5px;
+	margin: 0px 0 8px;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid #20567c;
+}
+
+.header-box {
+	margin-top: 10px;
+}
+
+/*-- BUTTONS --*/
+
+a.years {
+  margin-top: 8px;
+}
+
+.download {
+	float: right;
+	margin-right: 50px;
+}
+
+.download a {
+	background-color: #fa6c04;
+	color: #ffffff;
+	padding: 10px;
+	border: 1px solid #ffffff;
+	text-decoration: none;
+}
+
+/*--- TREEMAP VIZ --*/
+
+#mainvis {
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+#mainvis div.desc {
+	padding: 0.8em;
+	font-weight: normal;
+	overflow: hidden;
+  font-size: 0.8em;
+}
+
+#mainvis h2 {
+	color: #ffffff;
+	font-weight: normal;
+	margin-bottom: 0.1em;
+  font-size: 1.1em;
+}
+
+.start #mainvis div.desc {
+  font-size: 0.6em;
+}
+
+#_tooltip {
+	background-color: #DDE7F0;
+	padding: 4px 6px;
+	border: 1px solid #A3B3C7;
+}
+
+.minus {
+color: #bb5d02; }
+
+.difference.format {
+float: left;
+width: 85px;
+font-size: 15px; }
+
+.diff, .ind {
+	padding-left: 3px;
+}
+
+.indicator.format {
+float: left;
+width: 85px;
+font-size: 13px; }
+
+.average.format {
+float: left;
+padding-right: 28px;
+font-size: 13px; }
+
+
+/*-- LAYOUT --*/
+
+.spacetop {
+	padding-top: 30px;
+}
+
+.spacetree {
+	padding-top: 60px;
+}
+
+.spaceheader {
+	padding-top: 20px;
+}
+
+
+.spacebottom {
+	padding-bottom: 30px;
+}
+
+/*-- Footer --*/
+
+#footer {
+  margin-top: 15px;
+}
+
+.vertical.map {
+	margin-top: 10px;
+}
+
+.legend.boxtext {
+	font-size: 0.9em;
+	float: left;
+	margin-right: 5px;
+}
+
+.graphtext1 {
+padding-left: 20px;
+padding-right: 25px;
+}
+
+.graphtext2 {
+padding-left: 50px;
+}
+
+.seitenbox {
+	line-height: 1.65em;
+	letter-spacing: 1px;
+}
+
+.recipientname {
+	font-size: 1.6em;
+}
+
+.inside {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.inside span.country {
+  font-size: 20px;
+  line-height: 24px;
+  display: block;
+  }
+
+table td.currency {
+	width: 130px;
+}
+
+table td.flow {
+  width: 90px;
+}
+
+table {
+  width: 100%;
+}
+
+.chosen-single {
+  font-size: 18px;
+}
+
+.fa {margin-right: 5px;}
+
+.pfeil-year {
+	margin-top: 10px;
+}
+
+.jqstooltip {
+	z-index: 1000;
+	width: 120px;
+	height: 40px;
+	font-size: 14px;
+}
+
+.countries .dropdown {
+	margin-top: 8px;
+}
+
+.trends td.country { width: 120px; }
+.trends td.amount {	width: 100px; }
+.trends td.projects {	width: 100px; }
+
+.context {
+	background-color: #555;
+	padding: 5px;
+	width: 100%;
+	height: 60px;
+}
+
+#no-data {
+	text-align: center;
+	font-size: 30px;
+	padding: 70px 0 70px 0;
+}

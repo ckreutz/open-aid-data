@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% set active_page = "schwerpunkte" %}
+{% block title %}Sector: {{ gesamt[0]['sectorname']|regex_replace("^\S*\.", "") }} {% endblock %}
+{% block body %}
+<div class="large-8 columns spacebottom">
+  <h1> Sector: {{gesamt[0]['sectorname']|regex_replace("^\S*\.", "")}} </h1>
+</div>
+<div class="large-4 columns left spacebottom">
+</div>
+</div>
+<div class="row">
+<div class="large-12 columns">
+  <div id="mainvis" style="width: auto; height: 300px;"> </div>
+  <div class="subline">{% include 'macro/data_disclaimer.html' %}</div>
+</div>
+</div>
+<div class="row">
+<div class="large-12 columns">
+  {% include 'macro/purpose-chart.html' %}
+  <div id="purpose" style="width: auto"></div>
+</div>
+</div>
+<div class="row spacetop">
+<div class="large-6 columns">
+  <h2>Top 10 countries between {{ g.start_year }}-{{ g.year }}</h2>
+  <p>{{ gesamt[0]['sectorname']|regex_replace("^\S*\.", "") }}</p>
+</div>
+<div class="large-6 columns">
+  <h2>Purposes between between 2000-{{ g.year }}</h2>
+  <p>{{ gesamt[0]['sectorname']|regex_replace("^\S*\.", "") }}</p>
+</div>
+</div>
+<div class="row">
+<div class="large-6 columns">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="schwerpunkte">Country</th>
+        <th class="currency">Sum</th>
+        <th class="projekte">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in countries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector">
+          {% if entry['recipientcode'] != 998 %}<a href="{{ url_for('show_recipient_year', country=entry['recipientcode'], year=g.year) }}">{{ entry['country'] }}</a>
+          {% else %}
+          {{ entry['country'] }}
+          {% endif %}
+        </td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="large-6 columns">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="schwerpunkte">Purpose</th>
+        <th class="currency">Sum</th>
+        <th class="projekte">Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries|sort(attribute='main_value', reverse=true) %}
+      {% if entry['main_value'] > 0 %}
+      <tr>
+        {% set rowloop = loop %}
+        <td class="sector">{{ entry['purposename'] }}</td>
+        <td class="currency">{{ entry['main_value']|number_trunc()|number_format() }} USD</td>
+        <td class="anzahl last">{{ entry['activities'] }}</td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+{% include 'macro/quellen.html' %}
+{% include 'macro/openspending.html' %}
+<div class="large-10 columns spacetop">
+{% include 'macro/disqus.html' %}
+</div>
+<script>
+$(document).ready(function() {
+OpenSpending.DatasetPage.init({
+treemapData: {"children": [
+  {% for entry in entries|sort(attribute='main_value') %}
+    {% if entry['main_value'] > 0 %}
+{"data": {"title": "{{ entry['purposename'] }}", "$area": {{ entry['treearea'] }}, "$color": "{{ entry['color'] }}", "value": "{{ entry['main_value']|number_trunc()|number_format() }} USD", "printable_value": "{{ entry['purposename'] }}", "link": "", "show_title": {{ entry['show'] }}}, "children": [], "name": "{{ entry['main_value']|number_trunc()|number_format()  }}", "id": "{{ entry['crsid'] }}"}{% if loop.last == False %},{% endif %}
+{% endif %}
+{% endfor %}
+  ]}
+});
+});
+</script>
+{% endblock %}
