@@ -225,7 +225,7 @@ def show_recipient_year(country, year):
     totalYear = totalYear or 1
 
     iati_entries = []
-    for row in query_db("select sector_code as sector, count(*) as transactions, id, sum(value) as main_value from iati where recipient_country = (select iati_country from countries where crs_code = {0}) and YEAR(transaction_date) = {1} and sector != '' and value > 0 group by sector_code order by main_value DESC limit 30".format(country, year)):
+    for row in query_db("select name as sectorname, count(*) as transactions, id, sum(value) as main_value from iati join iati_sectors on code = sector_code where recipient_country = (select iati_country from countries where crs_code = {0}) and YEAR(transaction_date) = {1} and sector != '' and value > 0 and transaction_type not in ('Commitments', 'COMMITMENT', 'Commitments') group by sector_code order by main_value DESC limit 30".format(country, year)):
         d = dict(row.items())
         if year > g.year:
             d['treearea'] = (d['main_value'] / totalYear) * 100

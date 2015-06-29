@@ -43,7 +43,7 @@
 </div>
 <div class="large-3 medium-4 columns">
   <div class="seitenbox">  <p>In {{ info[0]['land'] }} there were <span class="big-letter">{{ info[0]['total_activities']|number_format() }} projects</span> by the Official Development Assistance between {{ g.start_year }} and {{ g.year }} Of which <span class="big-letter">{{ info[0]['disbursement']|number_trunc()|number_format() }} USD</span> were spent and  {{ info[0]['total_sum']|number_trunc()|number_format() }} USD were committed.
-    {% if position %} 
+    {% if position %}
       In the recipients list from the ODA, in the last {{ g.year - g.start_year }} years {{ info[0]['land'] }} has been positioned in the <span class="big-letter"> {{ position[0]['id'] }}</span> place of a total of 154.
       {% endif %}
     </p>
@@ -211,8 +211,6 @@ $(document).ready(function() {
         yvalues.push(Math.round(item.value * 100) / 100);
       }
     }
-
-    console.log(xvalues, yvalues);
 
     $('.dynamicbar[data-chart="' + name + '"]').sparkline(yvalues.reverse(),
       {type: 'line',
