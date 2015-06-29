@@ -196,7 +196,7 @@ def show_recipient_year(country, year):
         sectorYearPrep = sectorYearPrep + q + str(i)
         if i < result_top:
             sectorYearPrep = sectorYearPrep + ","
-        i + = 1
+        i += 1
 
     sectorYearPrep = sectorYearPrep + " from crs where recipientcode = %s group by Year" % (country)
 
@@ -289,7 +289,7 @@ def show_donor_year(donor, year):
             sectorYearPrep = sectorYearPrep + q + str(i)
             if i < result_top:
                     sectorYearPrep = sectorYearPrep + ","
-            i + = 1
+            i += 1
 
         sectorYearPrep = sectorYearPrep + " from crs where donorcode = %s group by Year" % (donor)
 
@@ -435,7 +435,7 @@ def show_schwerpunkt(schwerpunkt):
             sectorYearPrep = sectorYearPrep + q + str(i)
             if i < result_top:
                     sectorYearPrep = sectorYearPrep + ","
-            i + = 1
+            i += 1
 
         sectorYearPrep = sectorYearPrep + " from crs group by Year"
 
