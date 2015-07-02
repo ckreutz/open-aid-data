@@ -11,6 +11,7 @@ log_sectors.txt
 log_purpose.txt
 log.txt
 log_donor.txt
+sitemap.xml
 
 # Use wildcards as well
 # *~

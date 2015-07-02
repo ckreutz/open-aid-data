@@ -24,7 +24,7 @@ REGIONFILTER = [998, 889, 798, 789, 689, 679, 619, 589, 498, 489, 389, 380, 298,
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:ezEYJ2b3nWF6@192.168.99.100:32768/crs'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost:3306/crs'
 
 # app.config['FREEZER_RELATIVE_URLS'] = True
 db = SQLAlchemy(app)
@@ -503,4 +503,4 @@ def show_error():
     return render_template('error.html')
 
 if __name__ == '__main__':
-        app.run()
+        app.run(host='0.0.0.0')
