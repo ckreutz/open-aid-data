@@ -44,10 +44,10 @@ def query_db_one(query):
 
 def tremapCalc(t):
     t['show'] = "true"
-    if t['treearea'] <= 10:
+    if t['treearea'] <= 5:
         t['color'] = "#84aaac"
         t['show'] = "false"
-    elif t['treearea'] > 10 and t['treearea'] < 35:
+    elif t['treearea'] > 5 and t['treearea'] < 35:
         t['color'] = "#5a8d8f"
     elif t['treearea'] > 35 and t['treearea'] < 55:
         t['color'] = "#2f7073"
@@ -398,7 +398,7 @@ def show_schwerpunkte(year):
         if year == 'all':
             total = query_db_one('SELECT round(sum(usd_disbursement * 1000000),2) as total, crsid, sectorname from crs order by total desc')
 
-            for u in query_db('SELECT round(sum(usd_disbursement * 1000000),2) as main_value, crsid, sectorname, sectorcode, count(sectorname) as activities from crs where usd_commitment > 0 group by sectorname order by main_value desc'):
+            for u in query_db('SELECT round(sum(usd_disbursement * 1000000),2) as main_value, crsid, sectorname, sectorcode, count(sectorname) as activities from crs where usd_commitment > 0 group by sectorcode order by main_value desc'):
                 d = dict(u.items())
                 d['treearea'] = (d['main_value'] / total) * 190
                 d = tremapCalc(d)
@@ -406,7 +406,7 @@ def show_schwerpunkte(year):
         else:
             total = query_db_one('SELECT round(sum(usd_disbursement * 1000000),2) as total, crsid, sectorname from crs where Year = {0} order by total desc'.format(year))
 
-            for u in query_db('SELECT round(sum(usd_disbursement * 1000000),2) as main_value, crsid, sectorname, sectorcode, count(sectorname) as activities from crs where usd_commitment > 0 and Year = {0} group by sectorname order by main_value desc'.format(year)):
+            for u in query_db('SELECT round(sum(usd_disbursement * 1000000),2) as main_value, crsid, sectorname, sectorcode, count(sectorname) as activities from crs where usd_commitment > 0 and Year = {0} group by sectorcode order by main_value desc'.format(year)):
                 d = dict(u.items())
                 d['treearea'] = (d['main_value'] / total) * 190
                 d = tremapCalc(d)
